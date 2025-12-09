@@ -1,24 +1,23 @@
-from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
-from astrbot.api.star import Context, Star, register
-from astrbot.api import logger
+from astrbot.api.all import *
+import subprocess
 
-@register("helloworld", "YourName", "一个简单的 Hello World 插件", "1.0.0")
-class MyPlugin(Star):
+# 修改为你刚才创建的脚本的绝对路径
+SCRIPT_PATH = r"E:\BOT\MyBotScripts\do_pack.py"
+
+@register("Win打包助手", "YourName", "1.0.0", "Windows本地打包工具")
+class WinPackerPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
 
-    async def initialize(self):
-        """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
+    @command("打包游戏")
+    async def pack_game_cmd(self, event: AstrMessageEvent):
+        """发送 '打包游戏' 触发"""
+        
+        yield event.plain_result("收到指令！正在后台启动打包脚本，请留意飞书通知...")
 
-    # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
-    @filter.command("helloworld")
-    async def helloworld(self, event: AstrMessageEvent):
-        """这是一个 hello world 指令""" # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
-        user_name = event.get_sender_name()
-        message_str = event.message_str # 用户发的纯文本消息字符串
-        message_chain = event.get_messages() # 用户所发的消息的消息链 # from astrbot.api.message_components import *
-        logger.info(message_chain)
-        yield event.plain_result(f"Hello, {user_name}, 你发了 {message_str}!") # 发送一条纯文本消息
-
-    async def terminate(self):
-        """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
+        # 使用 subprocess 在后台运行，不会卡住 AstrBot
+        # shell=True 允许弹出黑窗口(调试用)，正式用可以去掉
+        try:
+            subprocess.Popen(["python", SCRIPT_PATH], shell=True)
+        except Exception as e:
+            yield event.plain_result(f"❌ 启动脚本失败: {e}")
