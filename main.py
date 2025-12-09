@@ -9,9 +9,9 @@ class WinPackerPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
 
-    @command("打包游戏")
+    @command("/打包游戏")
     async def pack_game_cmd(self, event: AstrMessageEvent):
-        """发送 '打包游戏' 触发"""
+        """发送 '/打包游戏' 触发"""
         
         yield event.plain_result("收到指令！正在后台启动打包脚本，请留意飞书通知...")
 
