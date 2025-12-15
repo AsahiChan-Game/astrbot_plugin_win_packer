@@ -1,0 +1,9 @@
+# Core dependencies
+watchdog>=3.0.0  # For configuration hot-reload
+aiofiles>=23.0.0  # For async file operations
+
+# Optional dependencies (already handled in original code)
+# matplotlib>=3.5.0  # For statistics visualization (optional)
+
+# AstrBot dependencies (assumed to be available in the environment)
+# These would typically be installed separately as part of the AstrBot framework
